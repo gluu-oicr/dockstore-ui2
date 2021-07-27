@@ -3,12 +3,6 @@ import { goToTab } from '../../../support/commands';
 import { ToolDescriptor } from '../../../../src/app/shared/swagger/model/toolDescriptor';
 import { Dockstore } from '../../../../src/app/shared/dockstore.model';
 
-describe('please work', () => {
-  it('please', () => {
-    expect(Cypress.config('baseUrl') === 'http://localhost:4200').to.be.true;
-  });
-});
-
 // Test an entry, these should be ambiguous between tools and workflows.
 describe('run stochastic smoke test', () => {
   testEntry('Tools');
