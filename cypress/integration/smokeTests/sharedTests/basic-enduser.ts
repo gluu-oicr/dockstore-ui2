@@ -9,27 +9,6 @@ describe('run stochastic smoke test', () => {
   testEntry('Workflows');
 });
 function testEntry(tab: string) {
-  beforeEach('get random entry on first page', () => {
-    cy.visit('/search');
-    // Fragile assertion that depends on the below workflow to be in the first table results, but not the 2nd
-    cy.contains('DataBiosphere/topmed-workflows/UM_variant_caller_wdl');
-    goToTab(tab);
-    const linkName = tab === 'Workflows' ? 'workflowColumn' : 'toolNames';
-    // select a random entry on the first page and navigate to it
-    let chosen_index = 0;
-    cy.get('[data-cy=' + linkName + ']')
-      .then(($list) => {
-        chosen_index = Math.floor(Math.random() * $list.length);
-      })
-      .eq(chosen_index)
-      .within(() => {
-        cy.get('a').then((el) => {
-          cy.log(el.prop('href')); // log the href in case a test fails
-          cy.visit(el.prop('href'));
-        });
-      });
-  });
-
   it('check info tab', () => {
     // test export to zip button
     goToTab('Info');
