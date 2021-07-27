@@ -1,6 +1,7 @@
 import { ga4ghPath } from '../../../../src/app/shared/constants';
 import { goToTab } from '../../../support/commands';
 import { ToolDescriptor } from '../../../../src/app/shared/swagger/model/toolDescriptor';
+import { Dockstore } from '../../../../src/app/shared/dockstore.model';
 
 describe('please work', () => {
   it('please', () => {
@@ -13,6 +14,7 @@ describe('run stochastic smoke test', () => {
   testEntry('Tools');
   testEntry('Workflows');
 });
+
 function testEntry(tab: string) {
   it('check info tab', () => {
     // test export to zip button
