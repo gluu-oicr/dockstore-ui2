@@ -1,21 +1,34 @@
 import { ga4ghPath } from '../../../../src/app/shared/constants';
-import { goToTab } from '../../../support/commands';
-import { ToolDescriptor } from '../../../../src/app/shared/swagger/model/toolDescriptor';
 import { Dockstore } from '../../../../src/app/shared/dockstore.model';
-
-describe('please work', () => {
-  it('please', () => {
-    expect(true).to.be.true;
-  });
-});
+import { goToTab } from '../../../support/commands';
 
 // Test an entry, these should be ambiguous between tools and workflows.
 describe('run stochastic smoke test', () => {
   testEntry('Tools');
   testEntry('Workflows');
 });
-
 function testEntry(tab: string) {
+  beforeEach('get random entry on first page', () => {
+    cy.visit('/search');
+    // Fragile assertion that depends on the below workflow to be in the first table results, but not the 2nd
+    cy.contains('DataBiosphere/topmed-workflows/UM_variant_caller_wdl');
+    goToTab(tab);
+    const linkName = tab === 'Workflows' ? 'workflowColumn' : 'toolNames';
+    // select a random entry on the first page and navigate to it
+    let chosen_index = 0;
+    cy.get('[data-cy=' + linkName + ']')
+      .then(($list) => {
+        chosen_index = Math.floor(Math.random() * $list.length);
+      })
+      .eq(chosen_index)
+      .within(() => {
+        cy.get('a').then((el) => {
+          cy.log(el.prop('href')); // log the href in case a test fails
+          cy.visit(el.prop('href'));
+        });
+      });
+  });
+
   it('check info tab', () => {
     // test export to zip button
     goToTab('Info');
@@ -187,19 +200,12 @@ function testWorkflow(url: string, version1: string, version2: string, trsUrl: s
     goToTab('Files');
     cy.url().should('contain', '?tab=files');
     cy.contains('Descriptor Files');
-    cy.get('.ace_editor').should('be.visible');
+    cy.get('[data-cy=descriptorFiles]');
     goToTab('Test Parameter Files');
-    if (Cypress.config('baseUrl') === 'https://dev.dockstore.net' || Cypress.config('baseUrl') === 'http://localhost:4200') {
-      if (type === ToolDescriptor.TypeEnum.NFL) {
-        cy.contains('This version has no files of this type.');
-        cy.get('.ace_editor').should('not.be.visible');
-      }
+    if (type === 'NFL') {
+      cy.contains('Nextflow does not have the concept of a test parameter file.');
     } else {
-      if (type === ToolDescriptor.TypeEnum.NFL) {
-        cy.contains('Nextflow does not have the concept of a test parameter file.');
-      } else {
-        cy.get('[data-cy=testParamFiles]');
-      }
+      cy.get('[data-cy=testParamFiles]');
     }
   });
 
