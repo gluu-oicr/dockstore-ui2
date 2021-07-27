@@ -193,6 +193,8 @@ jobs:
           command: bash -i -c 'npm run test-local-no-auth'
           environment:
             MOCHA_FILE: nightly-test-results/junit/test-local-smoke-no-auth-[hash].xml
+          requires:
+            - setup_integration_test
   upload_to_s3:
     working_directory: ~/repo
     docker:
