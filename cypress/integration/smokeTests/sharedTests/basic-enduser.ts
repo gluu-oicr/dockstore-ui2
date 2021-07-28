@@ -3,10 +3,10 @@ import { Dockstore } from '../../../../src/app/shared/dockstore.model';
 import { goToTab } from '../../../support/commands';
 
 // Test an entry, these should be ambiguous between tools and workflows.
-// describe('run stochastic smoke test', () => {
-//   testEntry('Tools');
-//   testEntry('Workflows');
-// });
+describe('run stochastic smoke test', () => {
+  testEntry('Tools');
+  testEntry('Workflows');
+});
 function testEntry(tab: string) {
   beforeEach('get random entry on first page', () => {
     cy.visit('/search');
@@ -176,7 +176,7 @@ const workflowVersionTuples = [
 ];
 
 describe('Monitor workflows', () => {
-  // workflowVersionTuples.forEach((t) => testWorkflow(t[0], t[1], t[2], t[3], t[4]));
+  workflowVersionTuples.forEach((t) => testWorkflow(t[0], t[1], t[2], t[3], t[4]));
 });
 
 function testWorkflow(url: string, version1: string, version2: string, trsUrl: string, type: string) {
