@@ -191,6 +191,8 @@ jobs:
       - run:
           name: Run local smoke tests (no auth)
           command: bash -i -c 'npm run test-local-no-auth'
+          environment:
+            MOCHA_FILE: integration-tests/test-results/junit/test-local-no-auth-[hash].xml
           when: always
   upload_to_s3:
     working_directory: ~/repo
