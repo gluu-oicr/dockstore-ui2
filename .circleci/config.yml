@@ -22,28 +22,21 @@ executors:
           POSTGRES_HOST_AUTH_METHOD: trust
       - image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
         environment:
-          - node.name: es01
-          - cluster.name: es-docker-cluster
-          - discovery.type: single-node
-          - bootstrap.memory_lock: true
-          - ES_JAVA_OPTS: -Xms512m -Xmx512m
-          - xpack.security.enabled: false
-          - xpack.monitoring.enabled: false
-          - xpack.graph.enabled: false
-          - xpack.watcher.enabled: false
-          - xpack.ml.enabled: false
-          - script.allowed_types: none
-          - script.allowed_contexts: none
-        ulimits:
-          memlock:
-            soft: -1
-            hard: -1
-        volumes:
-          - data01:/usr/share/elasticsearch/data
-        ports:
-          - 9200:9200
-        networks:
-          - elastic
+          node.name: es01
+          cluster.name: es-docker-cluster
+          discovery.type: single-node
+          bootstrap.memory_lock: true
+          ES_JAVA_OPTS: -Xms512m -Xmx512m
+          xpack.security.enabled: false
+          xpack.monitoring.enabled: false
+          xpack.graph.enabled: false
+          xpack.watcher.enabled: false
+          xpack.ml.enabled: false
+          script.allowed_types: none
+          script.allowed_contexts: none
+          http.port: 9200
+          network.host: 127.0.0.1
+
 jobs:
   # Specify the webpage url (https://dev.dockstore.net or https://staging.dockstore.org or https://dockstore.org)
   # and stack (dev or staging or prod) and the no auth smoke tests will be run against the corresponding webpage.
@@ -83,10 +76,10 @@ jobs:
         type: string
     working_directory: ~/repo
     docker:
-        - image: circleci/buildpack-deps:18.04-browsers
-          auth:
-            username: dockstoretestuser
-            password: $DOCKERHUB_PASSWORD
+      - image: circleci/buildpack-deps:18.04-browsers
+        auth:
+          username: dockstoretestuser
+          password: $DOCKERHUB_PASSWORD
     steps:
       - setup_nightly_tests
       - run:
@@ -123,10 +116,10 @@ jobs:
           name: Install dependencies
           #Only run 'npm ci' if node_modules was not restored from cache
           command: |
-              if [ ! -d "./node_modules" ]
-              then
-                bash -i -c 'npm ci'
-              fi
+            if [ ! -d "./node_modules" ]
+            then
+              bash -i -c 'npm ci'
+            fi
       - save_cache:
           key: dep-cache-{{ .Environment.CACHE_VERSION }}-{{ checksum "./package-lock.json" }}
           paths:
@@ -138,7 +131,7 @@ jobs:
               # Disabled until ng2-ui-auth and @ngx-lite/json is replaced. Currently they do not support Angular 9
               #      - run:
               #          name: Check dependencies
-              #          command: bash -i -c 'npm ls'
+            #          command: bash -i -c 'npm ls'
       - run:
           name: Lint
           command: bash -i -c 'npm run lint'
@@ -266,7 +259,7 @@ jobs:
     steps:
       - get_workspace
       - install_container_dependencies
-        # Override the webservice version in package.json to instead build against develop webservice
+      # Override the webservice version in package.json to instead build against develop webservice
       - run:
           name: set webservice to develop
           command: bash -i -c 'npm config set dockstore-ui2:webservice_version develop'
@@ -278,7 +271,7 @@ workflows:
   version: 2
   everything:
     jobs:
-#      # Add the tags filter to all jobs so they will run before upload_to_s3
+      # Add the tags filter to all jobs so they will run before upload_to_s3
       - lint_license_unit_test_coverage:
           filters:
             tags:
@@ -359,11 +352,11 @@ workflows:
           stack: "staging"
           context:
             - dockerhub
-#      - uptime_monitor_no_auth:
-#          name: "uptime_monitor_no_auth-prod"
-#          stack: "prod"
-#          context:
-#            - dockerhub
+      #      - uptime_monitor_no_auth:
+      #          name: "uptime_monitor_no_auth-prod"
+      #          stack: "prod"
+      #          context:
+      #            - dockerhub
       # TODO: Add auth tests for staging/prod once https://ucsc-cgl.atlassian.net/browse/SEAB-2071 is done.
       - uptime_monitor_auth:
           stack: "dev"
