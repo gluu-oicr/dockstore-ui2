@@ -209,9 +209,6 @@ jobs:
       - restore_cache:
           key: cypress-cache-{{ .Environment.CACHE_VERSION }}-{{ checksum "./package-lock.json" }}
       - run:
-          name: Wait for ES startup
-          command: dockerize -wait tcp://localhost:9200
-      - run:
           name: Run local smoke tests (no auth)
           command: bash -i -c 'npm run test-local-no-auth'
           environment:
