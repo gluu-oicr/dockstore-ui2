@@ -199,7 +199,7 @@ jobs:
           when: always
       - upload_artifacts
   local_smoke_tests:
-    executor: integration_test_exec
+    executor: setup_smoke_tests
     working_directory: ~/repo
     steps:
       - setup_integration_test
@@ -416,6 +416,21 @@ commands:
       - run:
           name: Prebuild
           command: bash -i -c 'npm run prebuild.prod'
+  setup_smoke_tests:
+    steps:
+      - setup_integration_test
+      - run:
+          name: Create admin and set a token
+          command: |
+          psql -h localhost -c '
+          WITH rows AS (
+            INSERT INTO enduser(username, isAdmin)
+            VALUES ('dockstoretestuser', true)
+            returning id
+          )
+          INSERT INTO token(content, userid, username, tokensource)
+          SELECT 'abcde', id, 'dockstoretestuser', 'dockstore'
+          FROM rows;' -U postgres
   upload_nightly_artifacts:
     steps:
       - store_test_results:
