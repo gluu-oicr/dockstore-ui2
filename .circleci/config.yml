@@ -21,9 +21,6 @@ executors:
           POSTGRES_PASSWORD: postgres
           POSTGRES_HOST_AUTH_METHOD: trust
       - image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
-        auth:
-          username: dockstoretestuser
-          password: $DOCKERHUB_PASSWORD
         environment:
           node.name: es01
           cluster.name: es-docker-cluster
@@ -133,7 +130,7 @@ jobs:
             - ~/.cache
               # Disabled until ng2-ui-auth and @ngx-lite/json is replaced. Currently they do not support Angular 9
               #      - run:
-              #          name: Check dependencies
+            #          name: Check dependencies
             #          command: bash -i -c 'npm ls'
       - run:
           name: Lint
@@ -209,6 +206,9 @@ jobs:
       - restore_cache:
           key: cypress-cache-{{ .Environment.CACHE_VERSION }}-{{ checksum "./package-lock.json" }}
       - run:
+          name: verify containers
+          command: bash -i -c 'docker ps'
+      - run:
           name: Run local smoke tests (no auth)
           command: bash -i -c 'npm run test-local-no-auth'
           environment:
@@ -275,36 +275,6 @@ workflows:
   everything:
     jobs:
       # Add the tags filter to all jobs so they will run before upload_to_s3
-      - lint_license_unit_test_coverage:
-          filters:
-            tags:
-              only: /.*/
-          context:
-            - dockerhub
-      - integration_test_1:
-          filters:
-            tags:
-              only: /.*/
-          requires:
-            - lint_license_unit_test_coverage
-          context:
-            - dockerhub
-      - integration_test_2:
-          filters:
-            tags:
-              only: /.*/
-          requires:
-            - lint_license_unit_test_coverage
-          context:
-            - dockerhub
-      - integration_test_3:
-          filters:
-            tags:
-              only: /.*/
-          requires:
-            - lint_license_unit_test_coverage
-          context:
-            - dockerhub
       - local_smoke_tests:
           filters:
             tags:
@@ -316,9 +286,6 @@ workflows:
       # Upload builds for tags and branches to s3.
       - upload_to_s3:
           requires:
-            - integration_test_1
-            - integration_test_2
-            - integration_test_3
             - local_smoke_tests
           filters:
             tags:
@@ -418,7 +385,11 @@ commands:
           background: true
       - run:
           name: Run webservice
-          command: java -jar dockstore-webservice.jar server travisci/web.yml 1>/dev/null
+          command: touch /dev/log.txt && touch /dev/logerr.txt
+          background: true
+      - run:
+          name: Run webservice
+          command: java -jar dockstore-webservice.jar server travisci/web.yml 1>/dev/log.txt 2>/dev/logerr.txt
           background: true
       - run: mkdir -p integration-tests/test-results/junit
       - run:
