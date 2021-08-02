@@ -279,8 +279,6 @@ workflows:
           filters:
             tags:
               only: /.*/
-          requires:
-            - lint_license_unit_test_coverage
           context:
             - dockerhub
       # Upload builds for tags and branches to s3.
