@@ -422,7 +422,7 @@ commands:
       - run:
           name: Create admin and set a token
           command: |
-            psql -h localhost -c '
+            psql -d webservice_test -h localhost -c '
             WITH rows AS (
               INSERT INTO enduser(username, isAdmin)
               VALUES ('dockstoretestuser', true)
