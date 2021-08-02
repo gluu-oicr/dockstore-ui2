@@ -431,6 +431,10 @@ commands:
           INSERT INTO token(content, userid, username, tokensource)
           SELECT 'abcde', id, 'dockstoretestuser', 'dockstore'
           FROM rows;' -U postgres
+      - run:
+          name: Index ES
+          command: |
+            curl -X POST "http://localhost:4200/api/api/ga4gh/v2/extended/tools/index" -H "accept: text/plain" -H "Authorization: Bearer abcde"
   upload_nightly_artifacts:
     steps:
       - store_test_results:
