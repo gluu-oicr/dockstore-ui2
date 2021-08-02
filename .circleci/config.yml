@@ -37,7 +37,6 @@ executors:
           xpack.ml.enabled: false
           http.port: 9200
           network.host: 127.0.0.1
-          transport.host: localhost
 
 jobs:
   # Specify the webpage url (https://dev.dockstore.net or https://staging.dockstore.org or https://dockstore.org)
