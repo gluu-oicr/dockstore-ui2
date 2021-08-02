@@ -35,6 +35,8 @@ executors:
           xpack.graph.enabled: false
           xpack.watcher.enabled: false
           xpack.ml.enabled: false
+          script.allowed_types: none
+          script.allowed_contexts: none
           http.port: 9200
           network.host: 127.0.0.1
 
