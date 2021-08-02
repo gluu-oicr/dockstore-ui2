@@ -206,6 +206,9 @@ jobs:
       - restore_cache:
           key: cypress-cache-{{ .Environment.CACHE_VERSION }}-{{ checksum "./package-lock.json" }}
       - run:
+          name: verify containers
+          command: bash -i -c 'docker ps'
+      - run:
           name: Run local smoke tests (no auth)
           command: bash -i -c 'npm run test-local-no-auth'
           environment:
