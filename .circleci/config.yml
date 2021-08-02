@@ -422,7 +422,7 @@ commands:
       - run:
           name: Create admin and set a token
           command: |
-            psql -d webservice_test -h localhost -c '
+            psql -d webservice_test -h localhost -c "
             WITH rows AS (
               INSERT INTO enduser(username, isAdmin)
               VALUES ('dockstoretestuser', true)
@@ -430,7 +430,7 @@ commands:
             )
             INSERT INTO token(content, userid, username, tokensource)
             SELECT 'abcde', id, 'dockstoretestuser', 'dockstore'
-            FROM rows;' -U postgres
+            FROM rows;" -U postgres
       - run:
           name: Index ES
           command: |
