@@ -388,11 +388,11 @@ commands:
           background: true
       - run:
           name: Run webservice
-          command: touch /dev/log.txt && touch /dev/logerr.txt
+          command: touch ~/repo/log.txt && touch ~/repo/logerr.txt
           background: true
       - run:
           name: Run webservice
-          command: java -jar dockstore-webservice.jar server travisci/web.yml 1>/dev/log.txt 2>/dev/logerr.txt
+          command: java -jar dockstore-webservice.jar server travisci/web.yml 1>~/repo/log.txt 2>~/repo/logerr.txt
           background: true
       - run: mkdir -p integration-tests/test-results/junit
       - run:
