@@ -129,7 +129,7 @@ jobs:
           paths:
             - ~/.cache
               # Disabled until ng2-ui-auth and @ngx-lite/json is replaced. Currently they do not support Angular 9
-              #      - run:
+            #      - run:
             #          name: Check dependencies
             #          command: bash -i -c 'npm ls'
       - run:
@@ -422,15 +422,15 @@ commands:
       - run:
           name: Create admin and set a token
           command: |
-          psql -h localhost -c '
-          WITH rows AS (
-            INSERT INTO enduser(username, isAdmin)
-            VALUES ('dockstoretestuser', true)
-            returning id
-          )
-          INSERT INTO token(content, userid, username, tokensource)
-          SELECT 'abcde', id, 'dockstoretestuser', 'dockstore'
-          FROM rows;' -U postgres
+            psql -h localhost -c '
+            WITH rows AS (
+              INSERT INTO enduser(username, isAdmin)
+              VALUES ('dockstoretestuser', true)
+              returning id
+            )
+            INSERT INTO token(content, userid, username, tokensource)
+            SELECT 'abcde', id, 'dockstoretestuser', 'dockstore'
+            FROM rows;' -U postgres
       - run:
           name: Index ES
           command: |
