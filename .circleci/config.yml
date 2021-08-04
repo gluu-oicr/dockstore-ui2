@@ -420,17 +420,17 @@ commands:
     steps:
       - setup_integration_test
       - run:
-          name: Create admin and set a token
+          name: Create token for fake user
           command: |
             psql -d webservice_test -h localhost -c "
-            WITH rows AS (
-              INSERT INTO enduser(username, isAdmin)
-              VALUES ('dockstoretestuser', true)
-              returning id
-            )
             INSERT INTO token(content, userid, username, tokensource)
-            SELECT 'abcde', id, 'dockstoretestuser', 'dockstore'
-            FROM rows;" -U postgres
+            SELECT 'abcde', 0, 'dockstoretestuser', 'dockstore';" -U postgres
+      - run:
+          name: Set fake user as admin
+          command: |
+            psql -d webservice_test -h localhost -c "
+            INSERT INTO enduser(username, isAdmin, id)
+            VALUES ('dockstoretestuser', true, userid);" -U postgres
       - run:
           name: Index ES
           command: |
