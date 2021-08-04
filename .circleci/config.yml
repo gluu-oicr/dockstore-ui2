@@ -419,22 +419,22 @@ commands:
   setup_smoke_tests:
     steps:
       - setup_integration_test
-      - run:
-          name: Set fake user as admin
-          command: |
-            psql -d webservice_test -h localhost -c "
-            INSERT INTO enduser(username, isAdmin, id)
-            VALUES ('dockstoretestuser', true, 0);" -U postgres
-      - run:
-          name: Create token for fake user
-          command: |
-            psql -d webservice_test -h localhost -c "
-            INSERT INTO token(content, userid, username, tokensource)
-            SELECT 'abcde', 0, 'dockstoretestuser', 'dockstore';" -U postgres
+#      - run:
+#          name: Set fake user as admin
+#          command: |
+#            psql -d webservice_test -h localhost -c "
+#            INSERT INTO enduser(username, isAdmin, id)
+#            VALUES ('dockstoretestuser', true, 0);" -U postgres
+#      - run:
+#          name: Create token for fake user
+#          command: |
+#            psql -d webservice_test -h localhost -c "
+#            INSERT INTO token(content, userid, username, tokensource)
+#            SELECT 'abcde', 0, 'dockstoretestuser', 'dockstore';" -U postgres
       - run:
           name: Index ES
           command: |
-            curl -X POST "http://localhost:4200/api/api/ga4gh/v2/extended/tools/index" -H "accept: text/plain" -H "Authorization: Bearer abcde"
+            curl -X POST "http://localhost:4200/api/api/ga4gh/v2/extended/tools/index" -H "accept: text/plain" -H "Authorization: Bearer imamafakedockstoretoken"
   upload_nightly_artifacts:
     steps:
       - store_test_results:
