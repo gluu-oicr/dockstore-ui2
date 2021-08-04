@@ -434,7 +434,7 @@ commands:
       - run:
           name: Index ES
           command: |
-            curl -X POST "http://localhost:4200/api/api/ga4gh/v2/extended/tools/index" -H "accept: text/plain" -H "Authorization: Bearer abcde"
+            curl -X POST "http://localhost:4200/api/ga4gh/v2/extended/tools/index" -H "accept: text/plain" -H "Authorization: Bearer abcde"
   upload_nightly_artifacts:
     steps:
       - store_test_results:
