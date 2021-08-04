@@ -430,7 +430,7 @@ commands:
           command: |
             psql -d webservice_test -h localhost -c "
             INSERT INTO enduser(username, isAdmin, id)
-            VALUES ('dockstoretestuser', true, userid);" -U postgres
+            VALUES ('dockstoretestuser', true, 0);" -U postgres
       - run:
           name: Index ES
           command: |
