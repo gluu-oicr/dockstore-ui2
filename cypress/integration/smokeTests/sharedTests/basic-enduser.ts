@@ -12,7 +12,7 @@ function testEntry(tab: string) {
   beforeEach('get random entry on first page', () => {
     cy.visit('/search');
     // Fragile assertion that depends on the below workflow to be in the first table results, but not the 2nd
-    cy.contains('DataBiosphere/topmed-workflows/UM_variant_caller_wdl');
+    cy.get('[data-cy=workflowColumn');
     goToTab(tab);
     const linkName = tab === 'Workflows' ? 'workflowColumn' : 'toolNames';
     // select a random entry on the first page and navigate to it
