@@ -418,6 +418,13 @@ commands:
       - run:
           name: Prebuild
           command: bash -i -c 'npm run prebuild.prod'
+  setup_smoke_tests:
+    steps:
+      - setup_integration_test
+      - run:
+          name: Index ES
+          command: |
+            curl -X POST "http://localhost:4200/api/api/ga4gh/v2/extended/tools/index" -H "accept: text/plain" -H "Authorization: Bearer imamafakedockstoretoken"
   upload_nightly_artifacts:
     steps:
       - store_test_results:
