@@ -22,7 +22,6 @@
               "src/manifest.json"
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.css",
               "node_modules/academicons/css/academicons.css",
               "src/styles.scss",
               "src/material.scss"
@@ -45,7 +44,6 @@
               "node_modules/ace-builds/src-min-noconflict/mode-perl.js",
               "node_modules/ace-builds/src-min-noconflict/theme-idle_fingers.js",
               "node_modules/ace-builds/src-min-noconflict/ext-searchbox.js",
-              "node_modules/bootstrap/dist/js/bootstrap.js"
             ]
           },
           "configurations": {
@@ -116,11 +114,9 @@
               "node_modules/ace-builds/src-min-noconflict/mode-text.js",
               "node_modules/ace-builds/src-min-noconflict/theme-idle_fingers.js",
               "node_modules/ace-builds/src-min-noconflict/ext-searchbox.js",
-              "node_modules/bootstrap/dist/js/bootstrap.js",
               "node_modules/marked/lib/marked.js"
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.css",
               "src/styles.scss",
               "src/material.scss"
             ],
