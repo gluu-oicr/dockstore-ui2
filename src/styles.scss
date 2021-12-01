@@ -23,6 +23,8 @@ $material-design-icons-font-directory-path: '~material-design-icons-iconfont/dis
 @import '~ngx-sharebuttons/themes/default/default-theme';
 @import 'featured-content.scss';
 @import '/src/materialColorScheme.scss';
+@import 'bootstrap/scss/bootstrap-grid';
+@import 'bootstrap/scss/bootstrap-utilities';
 /*@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);*/
 
 /* #487980 GREEN */
@@ -1171,4 +1173,20 @@ $truncate-text-values: 1, 3;
 // This style is used by table headers when there is no data to display
 .inactive-table-header {
   color: #d8d8d8 !important;
+}
+
+/* These two class are used by using <mat-list lessdense>
+ * The main difference from dense is that dense is font 12px and height 40px vs this 14px and 33px.
+ */
+.mat-list-base[lessdense] .mat-list-item {
+  font-size: 14px;
+}
+
+.mat-list-base[lessdense] .mat-list-item,
+.mat-list-base[lessdense] .mat-list-option {
+  display: block;
+  height: 33px;
+  -webkit-tap-highlight-color: transparent;
+  width: 100%;
+  padding: 0;
 }

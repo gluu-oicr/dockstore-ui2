@@ -42,9 +42,9 @@
       </ul>
     </div>
   </div>
-  <div class="row m-1" *ngIf="!showRedirect" fxLayout.lt-sm="column">
+  <div class="row m-1" *ngIf="!showRedirect" fxLayout="row space-between" fxLayout.lt-sm="column">
     <ngx-json-ld [json]="schema"></ngx-json-ld>
-    <div fxFlex="80">
+    <div fxFlex="75">
       <h3 id="workflow-path" data-cy="workflowTitle" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
         <span>
           <img src="../../assets/svg/workflow-circle.svg" alt="workflow icon" />
@@ -79,15 +79,15 @@
         >
       </p>
     </div>
-    <div fxFlex>
+    <div fxFlex *ngIf="isWorkflowPublic">
       <app-starring
         [workflow]="workflow"
         class="pull-right starring-button"
-        *ngIf="isWorkflowPublic && workflow"
+        *ngIf="workflow"
         (starGazersChange)="starGazersChange()"
       ></app-starring>
     </div>
-    <div *ngIf="!publicPage" class="col-md-5">
+    <div fxFlex *ngIf="!publicPage">
       <h3>
         <app-workflow-actions
           *ngIf="showWorkflowActions"
@@ -107,7 +107,13 @@
           <mat-chip class="workflow-label-tag" *ngFor="let label of workflowEditData?.labels" (click)="goToSearch(label)">{{
             label
           }}</mat-chip>
-          <button type="button" *ngIf="!labelsEditMode && !isWorkflowPublic" class="btn btn-link" (click)="toggleLabelsEditMode()">
+          <button
+            class="accent-1-dark"
+            mat-stroked-button
+            type="button"
+            *ngIf="!labelsEditMode && !isWorkflowPublic"
+            (click)="toggleLabelsEditMode()"
+          >
             Manage labels
           </button>
         </mat-chip-list>

@@ -24,7 +24,7 @@
     Workflows can only be shared with users and user groups who are registered with <a [href]="terraUrl">Terra</a>.
   </div>
   <mat-progress-bar mode="indeterminate" *ngIf="updating"> </mat-progress-bar>
-  <ul class="list-unstyled container-info" *ngIf="canViewPermissions">
+  <ul *ngIf="canViewPermissions">
     <li>
       <mat-form-field style="width: 100%">
         <mat-chip-list #ownerlist>

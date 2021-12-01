@@ -110,7 +110,13 @@
           <mat-chip class="container-label-tag" *ngFor="let label of containerEditData?.labels" (click)="goToSearch(label)">{{
             label
           }}</mat-chip>
-          <button type="button" *ngIf="!labelsEditMode && !isToolPublic" class="btn btn-link" (click)="toggleLabelsEditMode()">
+          <button
+            class="accent-1-dark"
+            mat-stroked-button
+            type="button"
+            *ngIf="!labelsEditMode && !isToolPublic"
+            (click)="toggleLabelsEditMode()"
+          >
             Manage labels
           </button>
         </mat-chip-list>

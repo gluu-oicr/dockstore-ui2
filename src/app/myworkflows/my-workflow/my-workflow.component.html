@@ -32,164 +32,150 @@
 </app-header>
 <div class="container-fluid sidebar-set-height">
   <!--Tool Content Page-->
-  <div class="row containers-rsb" style="height: 100%">
-    <mat-sidenav-container autosize class="sidebar-set-height">
-      <mat-sidenav
-        #sidenav
-        mode="side"
-        [(opened)]="showSidebar"
-        class="col-sm-3 col-xs-12"
-        *ngIf="(refreshingMyEntries$ | async) === false"
-      >
-        <div id="parent">
-          <div id="child">
-            <div
-              class="clearfix sidebar-header"
-              matTooltipPosition="after"
-              [matTooltip]="(hasSourceControlToken$ | async) ? '' : 'Requires source control token'"
-            >
-              <mat-toolbar>
-                <mat-toolbar-row>
-                  <div fxLayout="row" fxLayoutAlign="space-between center" class="w-100">
-                    <span>My {{ entryType$ | async }}s</span>
-                    <span>
-                      <span *ngIf="entryType === EntryType.BioWorkflow">
+  <mat-sidenav-container autosize class="sidebar-set-height">
+    <mat-sidenav #sidenav mode="side" [(opened)]="showSidebar" *ngIf="(refreshingMyEntries$ | async) === false">
+      <div id="parent">
+        <div id="child">
+          <div
+            class="sidebar-header"
+            matTooltipPosition="after"
+            [matTooltip]="(hasSourceControlToken$ | async) ? '' : 'Requires source control token'"
+          >
+            <mat-toolbar>
+              <mat-toolbar-row>
+                <div fxLayout="row" fxLayoutAlign="space-between center" class="w-100">
+                  <span>My {{ entryType$ | async }}s</span>
+                  <span>
+                    <span *ngIf="entryType === EntryType.BioWorkflow">
+                      <button
+                        mat-icon-button
+                        color="primary"
+                        id="registerWorkflowButton"
+                        matTooltip="Register {{ entryType$ | async }}"
+                        matTooltipPosition="after"
+                        (click)="showRegisterEntryModal()"
+                        [disabled]="isRefreshing$ | async"
+                      >
+                        <mat-icon>add</mat-icon>
+                      </button>
+                      <button
+                        mat-icon-button
+                        [matMenuTriggerFor]="myWorkflowsActions"
+                        [disabled]="isRefreshing$ | async"
+                        id="myWorkflowsMoreActionButtons"
+                        data-cy="myWorkflowsMoreActionButtons"
+                      >
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                      <mat-menu #myWorkflowsActions="matMenu">
                         <button
-                          mat-icon-button
+                          mat-menu-item
                           color="primary"
-                          id="registerWorkflowButton"
-                          matTooltip="Register {{ entryType$ | async }}"
+                          type="button"
+                          (click)="addToExistingWorkflows()"
+                          [disabled]="(isRefreshing$ | async) || (user$ | async) === false"
+                          matTooltip="Discover workflows added by others using your linked source control accounts"
                           matTooltipPosition="after"
-                          (click)="showRegisterEntryModal()"
-                          [disabled]="isRefreshing$ | async"
+                          id="addToExistingWorkflows"
+                          data-cy="addToExistingWorkflows"
                         >
-                          <mat-icon>add</mat-icon>
+                          <span>Discover Existing Dockstore Workflows</span>
                         </button>
-                        <button
-                          mat-icon-button
-                          [matMenuTriggerFor]="myWorkflowsActions"
-                          [disabled]="isRefreshing$ | async"
-                          id="myWorkflowsMoreActionButtons"
-                          data-cy="myWorkflowsMoreActionButtons"
-                        >
-                          <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #myWorkflowsActions="matMenu">
-                          <button
-                            mat-menu-item
-                            color="primary"
-                            type="button"
-                            (click)="addToExistingWorkflows()"
-                            [disabled]="(isRefreshing$ | async) || (user$ | async) === false"
-                            matTooltip="Discover workflows added by others using your linked source control accounts"
-                            matTooltipPosition="after"
-                            id="addToExistingWorkflows"
-                            data-cy="addToExistingWorkflows"
-                          >
-                            <span>Discover Existing Dockstore Workflows</span>
-                          </button>
-                        </mat-menu>
-                      </span>
-                      <ng-container *ngIf="entryType === EntryType.Service">
-                        <a
-                          mat-icon-button
-                          [href]="gitHubAppInstallationLink$ | async"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          matTooltip="Manage on GitHub"
-                          ><mat-icon>add</mat-icon></a
-                        >
-                      </ng-container>
+                      </mat-menu>
                     </span>
-                  </div>
-                </mat-toolbar-row>
-              </mat-toolbar>
+                    <ng-container *ngIf="entryType === EntryType.Service">
+                      <a
+                        mat-icon-button
+                        [href]="gitHubAppInstallationLink$ | async"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        matTooltip="Manage on GitHub"
+                        ><mat-icon>add</mat-icon></a
+                      >
+                    </ng-container>
+                  </span>
+                </div>
+              </mat-toolbar-row>
+            </mat-toolbar>
+          </div>
+          <p *ngIf="(hasGroupEntriesObject$ | async) === false">You have not registered any {{ entryType$ | async }}s</p>
+          <app-sidebar-accordion
+            [openOneAtATime]="oneAtATime"
+            [groupEntriesObject]="groupEntriesObject$ | async"
+            [refreshMessage]="isRefreshing$ | async"
+          ></app-sidebar-accordion>
+          <br />
+          <small
+            >Don't see an organization?
+            <a href="https://github.com/settings/connections/applications/7ad54aa857c6503013ea" target="_blank" rel="noopener noreferrer"
+              >Configure</a
+            >
+            your authorized organizations.</small
+          >
+          <ng-container *ngIf="entryType !== EntryType.Service">
+            <div class="clearfix sidebar-header">
+              <h3 class="sidebar-header">Shared with me</h3>
             </div>
-            <p *ngIf="(hasGroupEntriesObject$ | async) === false">You have not registered any {{ entryType$ | async }}s</p>
+            <p *ngIf="(hasGroupSharedEntriesObject$ | async) === false">You have no {{ entryType$ | async }}s shared with you</p>
             <app-sidebar-accordion
               [openOneAtATime]="oneAtATime"
-              [groupEntriesObject]="groupEntriesObject$ | async"
-              [refreshMessage]="isRefreshing$ | async"
+              [groupEntriesObject]="groupSharedEntriesObject$ | async"
             ></app-sidebar-accordion>
-            <br />
-            <small
-              >Don't see an organization?
-              <a href="https://github.com/settings/connections/applications/7ad54aa857c6503013ea" target="_blank" rel="noopener noreferrer"
-                >Configure</a
-              >
-              your authorized organizations.</small
-            >
-            <ng-container *ngIf="entryType !== EntryType.Service">
-              <div class="clearfix sidebar-header">
-                <h3 class="sidebar-header">Shared with me</h3>
-              </div>
-              <p *ngIf="(hasGroupSharedEntriesObject$ | async) === false">You have no {{ entryType$ | async }}s shared with you</p>
-              <app-sidebar-accordion
-                [openOneAtATime]="oneAtATime"
-                [groupEntriesObject]="groupSharedEntriesObject$ | async"
-              ></app-sidebar-accordion>
-            </ng-container>
-          </div>
+          </ng-container>
         </div>
-      </mat-sidenav>
-      <mat-sidenav-content [className]="showSidebar ? 'col-sm-9' : 'col-sm-12'" class="col-xs-12 sidebar-set-height">
-        <div
-          *ngIf="
-            (isRefreshing$ | async) === false &&
-            (hasGroupEntriesObject$ | async) === false &&
-            (hasGroupSharedEntriesObject$ | async) === false
-          "
-        >
-          <div class="col-md-12">
-            <mat-card class="alert alert-info" role="alert">
-              <p>
-                <mat-icon>info</mat-icon>
-                There are currently no {{ entryType$ | async }}s registered under this account. To add your first {{ entryType$ | async }},
-                do one of the following:
-              </p>
-              <ul>
-                <li *ngIf="entryType === EntryType.Service">
-                  Press the 'Manage on GitHub' button and follow the GitHub apps web interface to create services from your GitHub
-                  repositories.
-                </li>
-                <li>
-                  Press the 'Register {{ entryType$ | async | titlecase }}' button to manually add a {{ entryType$ | async }} using the
-                  registration wizard.
-                </li>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content class="sidebar-set-height">
+      <div
+        *ngIf="
+          (isRefreshing$ | async) === false &&
+          (hasGroupEntriesObject$ | async) === false &&
+          (hasGroupSharedEntriesObject$ | async) === false
+        "
+      >
+        <div class="col-md-12">
+          <mat-card class="alert alert-info" role="alert">
+            <p>
+              <mat-icon>info</mat-icon>
+              There are currently no {{ entryType$ | async }}s registered under this account. To add your first {{ entryType$ | async }}, do
+              one of the following:
+            </p>
+            <ul>
+              <li *ngIf="entryType === EntryType.Service">
+                Press the 'Manage on GitHub' button and follow the GitHub apps web interface to create services from your GitHub
+                repositories.
+              </li>
+              <li>
+                Press the 'Register {{ entryType$ | async | titlecase }}' button to manually add a {{ entryType$ | async }} using the
+                registration wizard.
+              </li>
+              <button mat-raised-button color="primary" type="button" (click)="showRegisterEntryModal()" [disabled]="isRefreshing$ | async">
+                Register {{ entryType$ | async | titlecase }}
+              </button>
+
+              <span *ngIf="entryType === EntryType.BioWorkflow">
+                <li>If there are already workflows on Dockstore added by other users that you have access to, press the button below.</li>
                 <button
                   mat-raised-button
                   color="primary"
                   type="button"
-                  (click)="showRegisterEntryModal()"
-                  [disabled]="isRefreshing$ | async"
+                  (click)="addToExistingWorkflows()"
+                  [disabled]="(isRefreshing$ | async) || (noUser$ | async)"
+                  matTooltip="Discover workflows added by others using your linked source control accounts"
                 >
-                  Register {{ entryType$ | async | titlecase }}
+                  Discover Existing Dockstore Workflows
                 </button>
-
-                <span *ngIf="entryType === EntryType.BioWorkflow">
-                  <li>If there are already workflows on Dockstore added by other users that you have access to, press the button below.</li>
-                  <button
-                    mat-raised-button
-                    color="primary"
-                    type="button"
-                    (click)="addToExistingWorkflows()"
-                    [disabled]="(isRefreshing$ | async) || (noUser$ | async)"
-                    matTooltip="Discover workflows added by others using your linked source control accounts"
-                  >
-                    Discover Existing Dockstore Workflows
-                  </button>
-                </span>
-              </ul>
-              <div *ngIf="!hasGitHubToken" class="mt-3">
-                <button mat-raised-button (click)="link()">
-                  <fa-icon [icon]="faGithub"></fa-icon> You do not have a linked GitHub token, click here to link a GitHub token
-                </button>
-              </div>
-            </mat-card>
-          </div>
+              </span>
+            </ul>
+            <div *ngIf="!hasGitHubToken" class="mt-3">
+              <button mat-raised-button (click)="link()">
+                <fa-icon [icon]="faGithub"></fa-icon> You do not have a linked GitHub token, click here to link a GitHub token
+              </button>
+            </div>
+          </mat-card>
         </div>
-        <app-workflow [isWorkflowPublic]="false" [user]="user"></app-workflow>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
-  </div>
+      </div>
+      <app-workflow [isWorkflowPublic]="false" [user]="user"></app-workflow>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>

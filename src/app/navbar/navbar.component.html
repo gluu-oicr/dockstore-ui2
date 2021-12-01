@@ -14,8 +14,8 @@
   ~    limitations under the License.
   -->
 <mat-toolbar color="primary">
-  <mat-toolbar-row class="toolbar-holder hidden-xs">
-    <div [ngClass]="'container navbar-fluid'">
+  <mat-toolbar-row class="toolbar-holder d-sm-block">
+    <div [ngClass]="'container container-fluid'">
       <span class="flex-toolbar">
         <a id="home-nav-button" (click)="resetPageNumber()" routerLink="" data-cy="home-nav-button">
           <img src="../assets/svg/Dockstore-logo-horizontal-white.svg" height="41" alt="dockstore logo" />
@@ -106,7 +106,7 @@
       </span>
     </div>
   </mat-toolbar-row>
-  <mat-toolbar-row class="visible-xs toolbar-holder toolbar-holder-sm clearfix">
+  <mat-toolbar-row class="d-sm-none toolbar-holder toolbar-holder-sm clearfix">
     <div class="container-fluid navbar-holder">
       <div fxLayout="row" fxLayoutAlign="space-between center">
         <a fxFlex id="home-nav-button-mobile" (click)="resetPageNumber()" routerLink="">
@@ -117,7 +117,7 @@
       </div>
     </div>
   </mat-toolbar-row>
-  <mat-toolbar-row class="visible-xs toolbar-holder text-center toolbar-holder-sm">
+  <mat-toolbar-row class="d-sm-none toolbar-holder text-center toolbar-holder-sm">
     <div class="container-fluid navbar-holder">
       <a mat-button class="icon" routerLink="/search">Search</a>
       <a mat-button class="icon" routerLink="/organizations">Organizations</a>

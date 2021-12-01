@@ -1,9 +1,9 @@
-<li *ngIf="((checkerId$ | async) || (canAdd$ | async)) && (isRefreshing$ | async) === false">
-  <form #editCheckerWorkflowPathForm="ngForm" class="form-inline">
-    <div class="form-group" fxFlex="noshrink" fxLayout fxLayoutAlign=" center">
+<mat-list-item *ngIf="((checkerId$ | async) || (canAdd$ | async)) && (isRefreshing$ | async) === false">
+  <form #editCheckerWorkflowPathForm="ngForm" fxLayout="row" fxLayoutAlign="start center" class="w-100">
+    <div fxFlex>
       <strong matTooltip="Checker workflow of this tool/workflow that tests it">Checker Workflow</strong>:
+      <span *ngIf="(noChecker$ | async) && ((isPublic$ | async) || (canRead && !canWrite))"> n/a</span>
     </div>
-    <span *ngIf="(noChecker$ | async) && ((isPublic$ | async) || (canRead && !canWrite))"> n/a</span>
     <div class="btn-group" role="group">
       <a
         [routerLink]="checkerWorkflowURL$ | async"
@@ -20,7 +20,8 @@
           #addCheckerWorkflowButton
           *ngIf="(canAdd$ | async) && canWrite"
           type="button"
-          class="btn btn-link"
+          class="accent-1-dark"
+          mat-button
           (click)="add()"
         >
           <mat-icon>add</mat-icon> Add
@@ -31,18 +32,8 @@
       </span>
     </div>
   </form>
-</li>
-<li *ngIf="parentId$ | async">
-  <form class="form-inline">
-    <div>
-      <div class="form-group"><strong matTooltip="The parent entry of this checker workflow">Parent Entry</strong>:</div>
-      <span>
-        <div class="btn-group" role="group">
-          <button id="viewParentEntryButton" type="button" class="btn btn-link" (click)="viewParentEntry()">
-            <mat-icon>visibility</mat-icon> View
-          </button>
-        </div>
-      </span>
-    </div>
-  </form>
-</li>
+</mat-list-item>
+<mat-list-item *ngIf="parentId$ | async">
+  <strong matTooltip="The parent entry of this checker workflow">Parent Entry</strong>:
+  <button id="viewParentEntryButton" type="button" mat-button (click)="viewParentEntry()"><mat-icon>visibility</mat-icon> View</button>
+</mat-list-item>
